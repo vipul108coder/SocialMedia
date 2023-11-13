@@ -1,24 +1,53 @@
-import logo from './logo.svg';
 import './App.css';
-
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header/Header';
+import  Login  from '../src/components/Login/Login';
+import Home from "./components/Home/Home"
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadUser } from './Actions/User';
+import Account from './components/Account/Account';
+import NewPost from './components/NewPost/NewPost';
+import Register from './components/Register/Register';
+import UpdateProfile from './UpdateProfile/UpdateProfile';
+import UpdatePassword from './components/ChangeMyPassword/UpdatePassword';
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+dispatch(loadUser());
+  }, [dispatch])
+
+
+ 
+
+
+  const {isAuthenticated} = useSelector(state => state.user);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      { isAuthenticated && <Header/> }
+      
+      
+      
+      <Routes>
+        
+        <Route path="/" element={ isAuthenticated ?<Home/> :<Login />} />
+   
+      <Route path="/account" element={ isAuthenticated ?<Account/> :<Login />} />
+     
+
+        <Route path="/newpost" element={ isAuthenticated ?<NewPost/> :<Login />} />
+       
+
+          <Route path="/register" element={ isAuthenticated ?<Account/> :<Register />} />
+
+        <Route path="/update/profile" element={ isAuthenticated ?<UpdateProfile/> :<Login />} />
+
+        <Route path="/update/password" element={ isAuthenticated ?<UpdatePassword/> :<Login />} /> 
+
+</Routes>
+
+    </Router>
   );
 }
 
